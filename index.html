@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cipher Tool (JS Version) - UAS Keamanan Web Mobile</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="glass-card">
+      <h1>
+        Cipher Tool
+        <span style="font-size: 0.5em; vertical-align: middle; opacity: 0.6"
+          >(JS Version)</span
+        >
+      </h1>
+
+      <div class="algorithm-flow">
+        <span class="flow-step">Caesar</span>
+        <span>→</span>
+        <span class="flow-step">Rail Fence</span>
+        <span>→</span>
+        <span class="flow-step">Affine</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 20px">
+        <div>
+          <label class="form-label">Input Text</label>
+          <textarea
+            class="form-control"
+            id="inputText"
+            rows="3"
+            placeholder="Enter text here..."
+          ></textarea>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+          "
+        >
+          <div>
+            <label class="form-label">Caesar Shift</label>
+            <input
+              type="number"
+              class="form-control"
+              id="caesarKey"
+              value="3"
+            />
+          </div>
+          <div>
+            <label class="form-label">Rail Fence Rails</label>
+            <input
+              type="number"
+              class="form-control"
+              id="railKey"
+              value="2"
+              min="1"
+            />
+          </div>
+          <div>
+            <label class="form-label">Affine A (Coprime 26)</label>
+            <select class="form-control" id="affineA">
+              <option value="1">1</option>
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="7">7</option>
+              <option value="9">9</option>
+              <option value="11">11</option>
+              <option value="15">15</option>
+              <option value="17">17</option>
+              <option value="19">19</option>
+              <option value="21">21</option>
+              <option value="23">23</option>
+              <option value="25">25</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Affine B (Shift)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="affineB"
+              value="8"
+            />
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-cipher" onclick="handleAction('encrypt')">
+            Encrypt
+          </button>
+          <button
+            class="btn-cipher btn-decrypt"
+            onclick="handleAction('decrypt')"
+          >
+            Decrypt
+          </button>
+        </div>
+
+        <div id="resultArea" class="result-area">
+          <div id="resultLabel" class="result-label">Result</div>
+          <div id="resultText" class="result-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/cipher.js"></script>
+    <script>
+      function handleAction(action) {
+        const text = document.getElementById("inputText").value;
+        const caesarKey = document.getElementById("caesarKey").value;
+        const railKey = document.getElementById("railKey").value;
+        const affineA = document.getElementById("affineA").value;
+        const affineB = document.getElementById("affineB").value;
+
+        if (!text) {
+          alert("Please enter some text!");
+          return;
+        }
+
+        let result = "";
+        try {
+          if (action === "encrypt") {
+            result = encryptCombined(text, caesarKey, railKey, affineA, affineB);
+          } else {
+            result = decryptCombined(text, caesarKey, railKey, affineA, affineB);
+          }
+
+          const resultArea = document.getElementById("resultArea");
+          const resultLabel = document.getElementById("resultLabel");
+          const resultText = document.getElementById("resultText");
+
+          resultLabel.innerText =
+            action === "encrypt" ? "Encrypted Text" : "Decrypted Text";
+          resultText.innerText = result;
+          resultArea.style.display = "block";
+        } catch (e) {
+          alert("Error: " + e.message);
+        }
+      }
+    </script>
+  </body>
+</html>
