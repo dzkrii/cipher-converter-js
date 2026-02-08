@@ -3,111 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cipher Tool (JS Version) - UAS Keamanan Web Mobile</title>
+    <title>Cipher Converter - Neo Brutalism</title>
+    <!-- Importing Lexend font for that Neo Brutalist feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="glass-card">
-      <h1>
-        Cipher Tool
-        <span style="font-size: 0.5em; vertical-align: middle; opacity: 0.6"
-          >(JS Version)</span
-        >
-      </h1>
+    <div class="neo-card">
+      <header style="text-align: center">
+        <h1>Cipher Tool</h1>
+      </header>
 
       <div class="algorithm-flow">
         <span class="flow-step">Caesar</span>
-        <span>→</span>
+        <span class="arrow">→</span>
         <span class="flow-step">Rail Fence</span>
-        <span>→</span>
+        <span class="arrow">→</span>
         <span class="flow-step">Affine</span>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 20px">
-        <div>
-          <label class="form-label">Input Text</label>
-          <textarea
+      <div class="form-group">
+        <label class="form-label" for="inputText">Input Text</label>
+        <textarea
+          class="form-control"
+          id="inputText"
+          rows="4"
+          placeholder="Tulis pesan rahasiamu di sini..."
+        ></textarea>
+      </div>
+
+      <div class="grid-params">
+        <div class="form-group">
+          <label class="form-label" for="caesarKey">Caesar Shift</label>
+          <input type="number" class="form-control" id="caesarKey" value="3" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="railKey">Rail Fence Rails</label>
+          <input
+            type="number"
             class="form-control"
-            id="inputText"
-            rows="3"
-            placeholder="Enter text here..."
-          ></textarea>
+            id="railKey"
+            value="2"
+            min="1"
+          />
         </div>
+        <div class="form-group">
+          <label class="form-label" for="affineA">Affine A (Coprime)</label>
+          <select class="form-control" id="affineA">
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="9">9</option>
+            <option value="11">11</option>
+            <option value="15">15</option>
+            <option value="17">17</option>
+            <option value="19">19</option>
+            <option value="21">21</option>
+            <option value="23">23</option>
+            <option value="25">25</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="affineB">Affine B (Shift)</label>
+          <input type="number" class="form-control" id="affineB" value="8" />
+        </div>
+      </div>
 
-        <div
-          style="
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-          "
-        >
-          <div>
-            <label class="form-label">Caesar Shift</label>
-            <input
-              type="number"
-              class="form-control"
-              id="caesarKey"
-              value="3"
-            />
-          </div>
-          <div>
-            <label class="form-label">Rail Fence Rails</label>
-            <input
-              type="number"
-              class="form-control"
-              id="railKey"
-              value="2"
-              min="1"
-            />
-          </div>
-          <div>
-            <label class="form-label">Affine A (Coprime 26)</label>
-            <select class="form-control" id="affineA">
-              <option value="1">1</option>
-              <option value="3">3</option>
-              <option value="5">5</option>
-              <option value="7">7</option>
-              <option value="9">9</option>
-              <option value="11">11</option>
-              <option value="15">15</option>
-              <option value="17">17</option>
-              <option value="19">19</option>
-              <option value="21">21</option>
-              <option value="23">23</option>
-              <option value="25">25</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Affine B (Shift)</label>
-            <input
-              type="number"
-              class="form-control"
-              id="affineB"
-              value="8"
-            />
-          </div>
-        </div>
+      <div class="btn-group">
+        <button class="btn-neo" onclick="handleAction('encrypt')">
+          ENCRYPT!
+        </button>
+        <button class="btn-neo btn-decrypt" onclick="handleAction('decrypt')">
+          DECRYPT!
+        </button>
+      </div>
 
-        <div class="btn-group">
-          <button class="btn-cipher" onclick="handleAction('encrypt')">
-            Encrypt
-          </button>
-          <button
-            class="btn-cipher btn-decrypt"
-            onclick="handleAction('decrypt')"
-          >
-            Decrypt
-          </button>
-        </div>
-
-        <div id="resultArea" class="result-area">
-          <div id="resultLabel" class="result-label">Result</div>
-          <div id="resultText" class="result-text"></div>
-        </div>
+      <div id="resultArea" class="result-area">
+        <div id="resultLabel" class="result-label">Result</div>
+        <div id="resultText" class="result-text"></div>
       </div>
     </div>
 
@@ -121,16 +100,28 @@
         const affineB = document.getElementById("affineB").value;
 
         if (!text) {
-          alert("Please enter some text!");
+          alert("Masukkan teks terlebih dahulu!");
           return;
         }
 
         let result = "";
         try {
           if (action === "encrypt") {
-            result = encryptCombined(text, caesarKey, railKey, affineA, affineB);
+            result = encryptCombined(
+              text,
+              caesarKey,
+              railKey,
+              affineA,
+              affineB,
+            );
           } else {
-            result = decryptCombined(text, caesarKey, railKey, affineA, affineB);
+            result = decryptCombined(
+              text,
+              caesarKey,
+              railKey,
+              affineA,
+              affineB,
+            );
           }
 
           const resultArea = document.getElementById("resultArea");
@@ -138,9 +129,12 @@
           const resultText = document.getElementById("resultText");
 
           resultLabel.innerText =
-            action === "encrypt" ? "Encrypted Text" : "Decrypted Text";
+            action === "encrypt" ? "Encrypted Result" : "Decrypted Result";
           resultText.innerText = result;
           resultArea.style.display = "block";
+
+          // Smooth scroll to result
+          resultArea.scrollIntoView({ behavior: "smooth", block: "nearest" });
         } catch (e) {
           alert("Error: " + e.message);
         }
