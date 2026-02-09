@@ -1,6 +1,13 @@
 /**
- * Cipher Logic for UAS Keamanan Web Mobile
- * Sequence: Caesar -> Rail Fence -> Affine
+ * UAS KEAMANAN WEB MOBILE
+ * ANGGOTA KELOMPOK:
+ * 1. FATAHUL AHMAD DZIKRI
+ * 2. PARRA DIANA AN'NUR
+ * 3. YUDHI RISWANDI
+ * 4. FINCE PUTRA JAYA HULU
+ * 
+ * ALGORITMA:
+ * CAESAR CIPHER -> RAIL FENCE CIPHER -> AFFINE CIPHER
  */
 
 // --- Caesar Cipher ---
